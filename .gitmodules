@@ -2,3 +2,7 @@
 	path = libDaisy
 	url = https://github.com/electro-smith/libDaisy
 	branch = v7.0.1
+[submodule "DaisySP"]
+	path = DaisySP
+	url = https://github.com/electro-smith/DaisySP
+	branch = V1.0.0
