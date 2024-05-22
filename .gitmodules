@@ -1,0 +1,4 @@
+[submodule "libDaisy"]
+	path = libDaisy
+	url = https://github.com/electro-smith/libDaisy
+	branch = v7.0.1
