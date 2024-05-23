@@ -1,4 +1,5 @@
 #include "daisy_seed.h"
+#include <queue>
 
 using namespace daisy;
 
@@ -61,6 +62,8 @@ int main(void)
 
     midi.StartReceive();
 
+    std::vector<NoteOnEvent> notes_pressed;
+
     /** Infinite Loop */
     while (1)
     {
@@ -70,7 +73,7 @@ int main(void)
         /** Process MIDI in the background */
         midi.Listen();
 
-        /** Loop through any MIDI Events */
+        /** Loop through any MIDI Events (ignoring channel for now) */
         while (midi.HasEvents())
         {
             MidiEvent msg = midi.PopEvent();
@@ -79,17 +82,19 @@ int main(void)
             {
             case NoteOn:
             {
-                led_state = true;
+                notes_pressed.push_back(msg.AsNoteOn());
             }
             break;
             case NoteOff:
             {
-                led_state = false;
+                notes_pressed.pop_back();
             }
             break;
             default:
                 break;
             }
+
+            led_state = !notes_pressed.empty();
         }
     }
 }
