@@ -33,3 +33,6 @@
 
 # Build Artifacts
 build
+
+# VSC
+.vscode
