@@ -6,7 +6,15 @@ using namespace daisy;
 DaisySeed hw;
 MidiUartHandler midi;
 
+enum class NotePriority
+{
+    HIGH,
+    LOW,
+    LAST
+};
+
 const float PEAK_PITCH_VOLTAGE = 3.3f;
+const NotePriority NOTE_PRIORITY = NotePriority::LAST;
 
 int main(void)
 {
@@ -53,6 +61,7 @@ int main(void)
             break;
             case NoteOff:
             {
+                // TODO: don't just pop last, remove released note
                 notes_pressed.pop_back();
             }
             break;
@@ -65,13 +74,33 @@ int main(void)
 
         if (!notes_pressed.empty())
         {
-            NoteOnEvent last_pressed = notes_pressed.back();
+            NoteOnEvent note_to_play;
+            switch (NOTE_PRIORITY)
+            {
+            case NotePriority::LAST:
+            {
+                note_to_play = notes_pressed.back();
+            }
+            break;
+            case NotePriority::HIGH:
+            {
+                // TODO
+            }
+            break;
+            case NotePriority::LOW:
+            {
+                // TODO
+            }
+            break;
+            default:
+                break;
+            }
 
             /* Calculate note voltage (v/oct)
             Midi middle C is 60, let's center around that.
             Take the note offset from center, multiply by 1/12, and offset by
             the center of our V range [0,PEAK_PITCH_VOLTAGE]. */
-            float note_voltage = (last_pressed.note - 60) * (1.0f / 12.0f) + PEAK_PITCH_VOLTAGE / 2.0f;
+            float note_voltage = (note_to_play.note - 60) * (1.0f / 12.0f) + PEAK_PITCH_VOLTAGE / 2.0f;
 
             /* Convert V ([0,PEAK_PITCH_VOLTAGE]) to DAC ([0, 4095])
             For intervals [a,b] and [c,d]:
@@ -87,10 +116,6 @@ int main(void)
             {
                 pitch = 0;
             }
-        }
-        else
-        {
-            pitch = 0;
         }
     }
 }
