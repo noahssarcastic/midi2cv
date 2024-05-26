@@ -2,7 +2,7 @@
 TARGET = blink
 
 # Sources
-CPP_SOURCES = blink.cpp 
+CPP_SOURCES = main.cpp midi.cpp pitch.cpp
 
 # Library Locations
 LIBDAISY_DIR = ./libDaisy
